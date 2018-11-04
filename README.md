@@ -1,6 +1,7 @@
 # gisc
 
 [![Build Status](https://travis-ci.org/jinjor/gisc.svg)](https://travis-ci.org/jinjor/gisc)
+[![Build status](https://ci.appveyor.com/api/projects/status/2f4mptff4upxn52v?svg=true)](https://ci.appveyor.com/project/jinjor/gisc)
 
 A scaffolding tool that uses Git repository.
 
