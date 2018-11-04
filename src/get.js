@@ -16,7 +16,7 @@ module.exports = function get(userAndProject, src, target, options) {
     throw new Error("Invalid command");
   }
   options = options || {};
-  const tmpDir = "/tmp/gitscaf";
+  const tmpDir = "/tmp/gisc";
   const server = options.server || "github.com";
   const protocol = options.protocol || "https";
   const branch = options.branch || "master";

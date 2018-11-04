@@ -4,8 +4,8 @@ const alias = require("./alias.js");
 const config = require("./config.js");
 
 argv.info(`Usage:
-    gitscaf get user/project src target [options]
-    gitscaf alias alias_name user/project src target [options]`);
+    gisc get user/project src target [options]
+    gisc alias alias_name user/project src target [options]`);
 argv.option([
   {
     name: "server",
@@ -57,7 +57,7 @@ try {
     const { targets, options } = argv.run(["get", ...allArgs]);
     const [_, ..._args] = targets;
     if (_args.length !== 3) {
-      const commandString = `gitscaf get ${allArgs.join(" ")}`;
+      const commandString = `gisc get ${allArgs.join(" ")}`;
       throw new Error("Failed to execute: " + commandString);
     }
     get(..._args, options);

@@ -1,17 +1,17 @@
 {
-  "name": "gitscaf",
+  "name": "gisc",
   "version": "1.0.0",
   "description": "A scaffolding tool that uses Git repository.",
   "main": "index.js",
   "bin": {
-    "gitscaf": "bin"
+    "gisc": "bin"
   },
   "scripts": {
     "test": "sh test.sh"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jinjor/gitscaf.git"
+    "url": "git+https://github.com/jinjor/gisc.git"
   },
   "author": "Yosuke Torii <jinjorweb@gmail.com>",
   "keywords": [

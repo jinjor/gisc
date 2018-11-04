@@ -2,7 +2,7 @@ const cp = require("child_process");
 const fs = require("fs-extra");
 const path = require("path");
 const os = require("os");
-const home = path.join(os.homedir(), ".gitscaf");
+const home = path.join(os.homedir(), ".gisc");
 const configPath = path.join(home, "config.json");
 
 function getConfig() {
