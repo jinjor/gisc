@@ -1,0 +1,10 @@
+{
+  "aliases": {
+    "test1": [
+      ".",
+      "example",
+      "tmp/p1",
+      "-f"
+    ]
+  }
+}

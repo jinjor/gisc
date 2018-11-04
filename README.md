@@ -11,7 +11,13 @@ $ npm install -g gitscaf
 ## Example
 
 ```console
-$ gitscaf jinjor/gitscaf example my-project
+$ gitscaf get jinjor/gitscaf example my-project
+```
+
+```console
+$ gitscaf alias ex jinjor/gitscaf example
+$ gitscaf ex my-project
+gitscaf get jinjor/gitscaf example my-project
 ```
 
 Run `gitscaf --help` to see more details.

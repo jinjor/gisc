@@ -11,7 +11,10 @@ process.on("exit", function(code, signal) {
   }
 });
 
-module.exports = function gitscaf(userAndProject, src, target, options) {
+module.exports = function get(userAndProject, src, target, options) {
+  if (!target) {
+    throw new Error("Invalid command");
+  }
   options = options || {};
   const tmpDir = "/tmp/gitscaf";
   const server = options.server || "github.com";
