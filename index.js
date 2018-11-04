@@ -73,7 +73,7 @@ if (userAndProject.startsWith("/") || userAndProject.startsWith(".")) {
 fs.copySync(templatePath, destDir);
 fs.removeSync(tmpDir);
 
-if (fs.existsSync(`${destDir}/init`)) {
+if (fs.existsSync(path.join(destDir, "init"))) {
   cp.execSync(`cd ${destDir} && ${process.env.SHELL} init`);
-  fs.unlinkSync(`${destDir}/init`);
+  fs.unlinkSync(path.join(destDir, "init"));
 }
