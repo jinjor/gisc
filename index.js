@@ -15,9 +15,9 @@ process.on("exit", function(code, signal) {
 argv.info("Usage: gitscaf my_project user/project template_path [options]");
 argv.option([
   {
-    name: "origin",
+    name: "server",
     type: "string",
-    description: "Use custom origin (default: github.com)"
+    description: "Use custom server (default: github.com)"
   },
   {
     name: "protocol",
@@ -42,15 +42,15 @@ const templatePath = path.join(tmpDir, templateRelativePath);
 if (!path.relative(tmpDir, templatePath)) {
   console.error("WARN: Using the top level directory is not recommended.");
 }
-const origin = options.origin || "github.com";
+const server = options.server || "github.com";
 const protocol = options.protocol || "https";
 const branch = options.branch || "master";
 
 const gitUrl =
   protocol === "git"
-    ? `git@${origin}:${userAndProject}.git`
+    ? `git@${server}:${userAndProject}.git`
     : protocol === "https"
-      ? `https://${origin}/${userAndProject}.git`
+      ? `https://${server}/${userAndProject}.git`
       : (console.error(`Unsupported protocol: ${protocol}`), process.exit(1));
 
 if (destDir !== ".") {
@@ -58,6 +58,7 @@ if (destDir !== ".") {
     console.error(`Directory "${destDir}" already exists.`);
     process.exit(1);
   }
+  cleanup.push(() => cp.execSync(`rm -rf ${destDir}`));
 }
 
 cp.execSync(`rm -rf ${tmpDir}`);
@@ -73,10 +74,6 @@ cp.execSync(`cp -r ${templatePath} ${destDir}`);
 cp.execSync(`rm -rf ${tmpDir}`);
 
 if (fs.existsSync(`${destDir}/init`)) {
-  // if (fs.accessSync(`${destDir}/init`, fs.constants.X_OK)) {
-  //   cp.execSync(`cd ${destDir} && ./init`);
-  // } else {
   cp.execSync(`cd ${destDir} && ${process.env.SHELL} init`);
-  // }
   cp.execSync(`rm ${destDir}/init`);
 }
