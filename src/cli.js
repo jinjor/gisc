@@ -58,8 +58,7 @@ try {
     const [_, ..._args] = targets;
     if (_args.length !== 3) {
       const commandString = `gitscaf get ${allArgs.join(" ")}`;
-      console.error("Failed to execute: " + commandString);
-      process.exit(1);
+      throw new Error("Failed to execute: " + commandString);
     }
     get(..._args, options);
   }
