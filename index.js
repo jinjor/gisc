@@ -44,14 +44,11 @@ if (!target) {
   process.exit(1);
 }
 const tmpDir = "/tmp/gitscaf";
-const templatePath = path.join(tmpDir, src);
-if (!path.relative(tmpDir, templatePath)) {
-  console.error("WARN: Using the top level directory is not recommended");
-}
 const server = options.server || "github.com";
 const protocol = options.protocol || "https";
 const branch = options.branch || "master";
 const force = options.force || false;
+const templatePath = path.join(tmpDir, src);
 
 const gitUrl =
   protocol === "git"
@@ -74,6 +71,7 @@ if (userAndProject.startsWith("/") || userAndProject.startsWith(".")) {
 } else {
   cleanup.push(() => fs.removeSync(tmpDir));
   cp.execSync(`git clone ${gitUrl} ${tmpDir} -b ${branch} --depth 1 --quiet`);
+  fs.removeSync(path.join(templatePath, ".git"));
 }
 fs.copySync(templatePath, target);
 fs.removeSync(tmpDir);
