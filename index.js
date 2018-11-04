@@ -29,6 +29,12 @@ argv.option([
     short: "b",
     type: "string",
     description: "Fetch a particular branch (default: master)"
+  },
+  {
+    name: "force",
+    short: "f",
+    type: "boolean",
+    description: "Override existing target (default: false)"
   }
 ]);
 const { targets, options } = argv.run();
@@ -45,6 +51,7 @@ if (!path.relative(tmpDir, templatePath)) {
 const server = options.server || "github.com";
 const protocol = options.protocol || "https";
 const branch = options.branch || "master";
+const force = options.force || false;
 
 const gitUrl =
   protocol === "git"
@@ -53,7 +60,7 @@ const gitUrl =
       ? `https://${server}/${userAndProject}.git`
       : (console.error(`Unsupported protocol: ${protocol}`), process.exit(1));
 
-if (fs.existsSync(target)) {
+if (!force && fs.existsSync(target)) {
   console.error(`Target "${target}" already exists`);
   process.exit(1);
 }

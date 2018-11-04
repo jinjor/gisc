@@ -25,3 +25,4 @@ node index . example tmp/p1
 node index . example/public tmp/p2
 node index ./example . tmp/deeply/nested/p3
 node index . example/public/index.html tmp/index.html
+node index -f . example/public/index.html tmp/index.html
