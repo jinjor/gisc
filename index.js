@@ -73,10 +73,3 @@ if (userAndProject.startsWith("/") || userAndProject.startsWith(".")) {
 }
 fs.copySync(templatePath, destDir);
 fs.removeSync(tmpDir);
-
-const initPath = path.join(destDir, "init");
-if (fs.existsSync(initPath)) {
-  const code = `cd ${destDir}\n` + fs.readFileSync(initPath, "utf8");
-  shelljs.exec(code);
-  fs.unlinkSync(initPath);
-}

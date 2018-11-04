@@ -20,7 +20,6 @@
   "license": "MIT",
   "dependencies": {
     "argv": "0.0.2",
-    "fs-extra": "^7.0.0",
-    "shelljs": "^0.8.2"
+    "fs-extra": "^7.0.0"
   }
 }
