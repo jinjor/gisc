@@ -2,6 +2,7 @@ const cp = require("child_process");
 const fs = require("fs-extra");
 const path = require("path");
 const argv = require("argv");
+const shelljs = require("shelljs");
 
 const cleanup = [];
 process.on("exit", function(code, signal) {
@@ -73,7 +74,9 @@ if (userAndProject.startsWith("/") || userAndProject.startsWith(".")) {
 fs.copySync(templatePath, destDir);
 fs.removeSync(tmpDir);
 
-if (fs.existsSync(path.join(destDir, "init"))) {
-  cp.execSync(`cd ${destDir} && ${process.env.SHELL} init`);
-  fs.unlinkSync(path.join(destDir, "init"));
+const initPath = path.join(destDir, "init");
+if (fs.existsSync(initPath)) {
+  const code = `cd ${destDir}\n` + fs.readFileSync(initPath, "utf8");
+  shelljs.exec(code);
+  fs.unlinkSync(initPath);
 }
