@@ -44,7 +44,10 @@ module.exports = function get(userAndProject, src, target, options) {
   } else {
     cleanup.push(() => fs.removeSync(tmpDir));
     cp.execSync(`git clone ${gitUrl} ${tmpDir} -b ${branch} --depth 1 --quiet`);
-    fs.removeSync(path.join(templatePath, ".git"));
+    const gitDir = path.join(templatePath, ".git");
+    if (fs.existsSync(gitDir)) {
+      fs.removeSync();
+    }
   }
   fs.copySync(templatePath, target);
   fs.removeSync(tmpDir);

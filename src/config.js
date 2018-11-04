@@ -44,7 +44,7 @@ function getAlias(name, config) {
 function showAlias(name, config) {
   const args = getAlias(name, config);
   if (args) {
-    console.log(`    ${name} = ${args.join(" ")}`);
+    console.log(`${name} = ${args.join(" ")}`);
   }
 }
 function registerAlias(name, args) {
