@@ -2,6 +2,7 @@ const cp = require("child_process");
 const fs = require("fs");
 const path = require("path");
 const argv = require("argv");
+const rimraf = require("rimraf");
 
 const cleanup = [];
 process.on("exit", function(code, signal) {
@@ -58,22 +59,22 @@ if (destDir !== ".") {
     console.error(`Directory "${destDir}" already exists.`);
     process.exit(1);
   }
-  cleanup.push(() => cp.execSync(`rm -rf ${destDir}`));
+  cleanup.push(() => rimraf.sync(`${destDir}`));
 }
 
-cp.execSync(`rm -rf ${tmpDir}`);
+rimraf.sync(`${tmpDir}`);
 if (userAndProject.startsWith("/") || userAndProject.startsWith(".")) {
   // debug mode
   const projectPath = path.resolve(userAndProject);
   cp.execSync(`cp -r ${projectPath} ${tmpDir}`);
 } else {
-  cleanup.push(() => cp.execSync(`rm -rf ${tmpDir}`));
+  cleanup.push(() => rimraf.sync(`${tmpDir}`));
   cp.execSync(`git clone ${gitUrl} ${tmpDir} -b ${branch} --depth 1 --quiet`);
 }
 cp.execSync(`cp -r ${templatePath} ${destDir}`);
-cp.execSync(`rm -rf ${tmpDir}`);
+rimraf.sync(`${tmpDir}`);
 
 if (fs.existsSync(`${destDir}/init`)) {
   cp.execSync(`cd ${destDir} && ${process.env.SHELL} init`);
-  cp.execSync(`rm ${destDir}/init`);
+  fs.unlinkSync(`${destDir}/init`);
 }
