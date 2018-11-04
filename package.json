@@ -1,0 +1,17 @@
+{
+  "name": "gitscaf",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "gitscaf": "bin"
+  },
+  "scripts": {
+    "test": "sh test.sh"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "argv": "0.0.2"
+  }
+}
