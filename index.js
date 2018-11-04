@@ -1,8 +1,7 @@
 const cp = require("child_process");
-const fs = require("fs");
+const fs = require("fs-extra");
 const path = require("path");
 const argv = require("argv");
-const rimraf = require("rimraf");
 
 const cleanup = [];
 process.on("exit", function(code, signal) {
@@ -55,24 +54,24 @@ const gitUrl =
       : (console.error(`Unsupported protocol: ${protocol}`), process.exit(1));
 
 if (destDir !== ".") {
-  if (fs.existsSync(`${destDir}`)) {
+  if (fs.existsSync(destDir)) {
     console.error(`Directory "${destDir}" already exists.`);
     process.exit(1);
   }
-  cleanup.push(() => rimraf.sync(`${destDir}`));
+  cleanup.push(() => fs.removeSync(destDir));
 }
 
-rimraf.sync(`${tmpDir}`);
+fs.removeSync(tmpDir);
 if (userAndProject.startsWith("/") || userAndProject.startsWith(".")) {
   // debug mode
   const projectPath = path.resolve(userAndProject);
-  cp.execSync(`cp -r ${projectPath} ${tmpDir}`);
+  fs.copySync(projectPath, tmpDir);
 } else {
-  cleanup.push(() => rimraf.sync(`${tmpDir}`));
+  cleanup.push(() => fs.removeSync(tmpDir));
   cp.execSync(`git clone ${gitUrl} ${tmpDir} -b ${branch} --depth 1 --quiet`);
 }
-cp.execSync(`cp -r ${templatePath} ${destDir}`);
-rimraf.sync(`${tmpDir}`);
+fs.copySync(templatePath, destDir);
+fs.removeSync(tmpDir);
 
 if (fs.existsSync(`${destDir}/init`)) {
   cp.execSync(`cd ${destDir} && ${process.env.SHELL} init`);
