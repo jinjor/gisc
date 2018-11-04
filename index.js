@@ -13,7 +13,7 @@ process.on("exit", function(code, signal) {
   }
 });
 
-argv.info("Usage: gitscaf my_project user/project template_path [options]");
+argv.info("Usage: gitscaf user/project src target_dir [options]");
 argv.option([
   {
     name: "server",
@@ -33,13 +33,13 @@ argv.option([
   }
 ]);
 const { targets, options } = argv.run();
-const [destDir, userAndProject, templateRelativePath] = targets;
-if (!templateRelativePath) {
+const [userAndProject, src, destDir] = targets;
+if (!destDir) {
   argv.help();
   process.exit(1);
 }
 const tmpDir = "/tmp/gitscaf";
-const templatePath = path.join(tmpDir, templateRelativePath);
+const templatePath = path.join(tmpDir, src);
 if (!path.relative(tmpDir, templatePath)) {
   console.error("WARN: Using the top level directory is not recommended.");
 }

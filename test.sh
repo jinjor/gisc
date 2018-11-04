@@ -4,23 +4,23 @@ rm -rf tmp
 mkdir tmp
 
 # too few arguments
-node index tmp/p . > /dev/null 2>&1
+node index . example > /dev/null 2>&1
 [[ $? = 0 ]] && exit 1
 # unknown options
-node index tmp/p . example --unknown > /dev/null 2>&1
+node index . example tmp/p --unknown > /dev/null 2>&1
 [[ $? = 0 ]] && exit 1
 # unknown protocol
-node index tmp/p . example --protocol=unknown > /dev/null 2>&1
+node index . example tmp/p --protocol=unknown > /dev/null 2>&1
 [[ $? = 0 ]] && exit 1
 # template dir not found
-node index tmp/p . not_exist > /dev/null 2>&1
+node index . not_exist tmp/p > /dev/null 2>&1
 [[ $? = 0 ]] && exit 1
 # existing dir
-node index tmp . example > /dev/null 2>&1
+node index . example tmp > /dev/null 2>&1
 [[ $? = 0 ]] && exit 1
 
 set -e
 
-node index tmp/p1 . example --protocol=git
-node index tmp/p2 . example/public --protocol=git
-node index tmp/p3 ./example . --protocol=git
+node index . example tmp/p1 --protocol=git
+node index . example/public tmp/p2 --protocol=git
+node index ./example . tmp/p3 --protocol=git
