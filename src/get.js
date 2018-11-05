@@ -11,10 +11,7 @@ process.on("exit", function(code, signal) {
   }
 });
 
-module.exports = function get(userAndProject, src, target, options) {
-  if (!target) {
-    throw new Error("Invalid command");
-  }
+module.exports = function get(userAndProject, src, target, options, dry) {
   options = options || {};
   const tmpDir = "/tmp/gisc";
   const server = options.server || "github.com";
@@ -22,7 +19,7 @@ module.exports = function get(userAndProject, src, target, options) {
   const branch = options.branch || "master";
   const force = options.force || false;
 
-  const templatePath = path.join(tmpDir, src);
+  const templatePath = src && path.join(tmpDir, src);
   const gitUrl =
     protocol === "git"
       ? `git@${server}:${userAndProject}.git`
@@ -34,7 +31,7 @@ module.exports = function get(userAndProject, src, target, options) {
   if (!force && fs.existsSync(target)) {
     throw new Error(`Target "${target}" already exists`);
   }
-  cleanup.push(() => fs.removeSync(target));
+  target && cleanup.push(() => fs.removeSync(target));
 
   fs.removeSync(tmpDir);
   if (userAndProject.startsWith("/") || userAndProject.startsWith(".")) {
@@ -44,11 +41,20 @@ module.exports = function get(userAndProject, src, target, options) {
   } else {
     cleanup.push(() => fs.removeSync(tmpDir));
     cp.execSync(`git clone ${gitUrl} ${tmpDir} -b ${branch} --depth 1 --quiet`);
-    const gitDir = path.join(templatePath, ".git");
-    if (fs.existsSync(gitDir)) {
-      fs.removeSync();
+
+    if (templatePath) {
+      const gitPath = path.join(templatePath, ".git");
+      fs.existsSync(gitPath) && fs.removeSync(gitPath);
     }
   }
-  fs.copySync(templatePath, target);
+  if (dry) {
+    if (templatePath && !fs.existsSync(templatePath)) {
+      throw new Error("Template does not exist: " + templatePath);
+    }
+  } else {
+    fs.removeSync(target);
+    fs.copySync(templatePath, target);
+  }
+
   fs.removeSync(tmpDir);
 };

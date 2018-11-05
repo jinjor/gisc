@@ -37,6 +37,10 @@ argv.option([
 try {
   const { targets, options } = argv.run();
   const [subCommand, ...args] = targets;
+  if (!subCommand) {
+    argv.help();
+    process.exit(0);
+  }
   if (subCommand === "ls") {
     if (args.length > 0) {
       argv.help();
@@ -49,6 +53,10 @@ try {
       argv.help();
       process.exit(1);
     }
+    // dry run
+    [userAndProject, src, target] = rest;
+    get(userAndProject, src, target, options, true);
+
     config.addAlias(name, process.argv.splice(4));
   } else if (subCommand === "remove") {
     if (args.length > 1) {
@@ -62,7 +70,8 @@ try {
       argv.help();
       process.exit(1);
     }
-    get(...args, options);
+    [userAndProject, src, target] = args;
+    get(userAndProject, src, target, options);
   } else if (subCommand === "share") {
     config.shareAlias(args);
   } else {
@@ -71,7 +80,7 @@ try {
     if (!partialArgs) {
       throw new Error(`No such alias: ${aliasName}`);
     }
-    const allArgs = partialArgs.concat(args);
+    const allArgs = partialArgs.concat(process.argv.splice(3));
     const { targets, options } = argv.run(["get", ...allArgs]);
     const [_, ..._args] = targets;
     if (_args.length !== 3) {

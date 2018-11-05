@@ -38,6 +38,15 @@ node src/cli add ls > /dev/null 2>&1
 # bad alias name
 node src/cli add get > /dev/null 2>&1
 [[ $? = 0 ]] && exit 1
+# bad alias name
+node src/cli add share > /dev/null 2>&1
+[[ $? = 0 ]] && exit 1
+# repository not found
+node src/cli add jinjor/unknown > /dev/null 2>&1
+[[ $? = 0 ]] && exit 1
+# path not found
+node src/cli add jinjor/gisc unknown > /dev/null 2>&1
+[[ $? = 0 ]] && exit 1
 # too many args
 node src/cli remove foo bar > /dev/null 2>&1
 [[ $? = 0 ]] && exit 1
