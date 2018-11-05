@@ -1,11 +1,14 @@
 const argv = require("argv");
 const get = require("./get.js");
-const alias = require("./alias.js");
 const config = require("./config.js");
 
 argv.info(`Usage:
     gisc get user/project src target [options]
-    gisc alias alias_name user/project src target [options]`);
+    gisc add alias_name user/project src target [options]
+    gisc ls
+    gisc remove alias_name
+    gisc share
+    `);
 argv.option([
   {
     name: "server",
@@ -34,19 +37,34 @@ argv.option([
 try {
   const { targets, options } = argv.run();
   const [subCommand, ...args] = targets;
-  if (subCommand === "alias") {
-    const [name, ...rest] = args;
-    if (rest.length > 3) {
+  if (subCommand === "ls") {
+    if (args.length > 0) {
       argv.help();
       process.exit(1);
     }
-    alias(name, process.argv.splice(4));
+    config.listAlias();
+  } else if (subCommand === "add") {
+    const [name, ...rest] = args;
+    if (args.length <= 1) {
+      argv.help();
+      process.exit(1);
+    }
+    config.addAlias(name, process.argv.splice(4));
+  } else if (subCommand === "remove") {
+    if (args.length > 1) {
+      argv.help();
+      process.exit(1);
+    }
+    const [name] = args;
+    config.removeAlias(name);
   } else if (subCommand === "get") {
     if (args.length !== 3) {
       argv.help();
       process.exit(1);
     }
     get(...args, options);
+  } else if (subCommand === "share") {
+    config.shareAlias(args);
   } else {
     const aliasName = subCommand;
     const partialArgs = config.getAlias(aliasName);

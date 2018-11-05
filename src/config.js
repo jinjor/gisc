@@ -21,16 +21,9 @@ function getConfig() {
   }
   return JSON.parse(fs.readFileSync(configPath, "utf8"));
 }
-
-const cleanup = [];
-process.on("exit", function(code, signal) {
-  if (code || signal === "SIGINT") {
-    for (let c of cleanup) {
-      c();
-    }
-  }
-});
-
+function saveConfig(config) {
+  fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
+}
 function listAlias() {
   const config = getConfig();
   for (let name in config.aliases) {
@@ -41,26 +34,44 @@ function getAlias(name, config) {
   config = config || getConfig();
   return config.aliases[name];
 }
+function removeAlias(name) {
+  const config = getConfig();
+  delete config.aliases[name];
+  saveConfig(config);
+}
 function showAlias(name, config) {
   const args = getAlias(name, config);
   if (args) {
     console.log(`${name} = ${args.join(" ")}`);
   }
 }
-function registerAlias(name, args) {
-  const blacklist = ["alias"];
+function showAliasCommand(name, config) {
+  const args = getAlias(name, config);
+  if (args) {
+    console.log(`gisc add ${name} ${args.join(" ")}`);
+  }
+}
+function shareAlias(names) {
+  const config = getConfig();
+  names = names.length ? names : Object.keys(config.aliases);
+  for (let name of names) {
+    showAliasCommand(name, config);
+  }
+}
+function addAlias(name, args) {
+  const blacklist = ["add", "ls", "remove", "get", "share"];
   if (blacklist.includes(name)) {
     throw new Error(`Alias name should not be one of ` + blacklist);
   }
   const config = getConfig();
   config.aliases[name] = args;
-  // console.log(name, args);
-  fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
+  saveConfig(config);
 }
 
 module.exports = {
   listAlias,
-  showAlias,
-  registerAlias,
-  getAlias
+  addAlias,
+  removeAlias,
+  getAlias,
+  shareAlias
 };
